@@ -1,0 +1,13 @@
+G:\video-san-pham\bin\XuongVideoSanPham.exe
+G:\video-san-pham\bin\runtimes\win-x64\native\WebView2Loader.dll
+G:\video-san-pham\bin\XuongVideoSanPham.dll
+G:\video-san-pham\bin\XuongVideoSanPham.deps.json
+G:\video-san-pham\bin\XuongVideoSanPham.runtimeconfig.json
+G:\video-san-pham\bin\XuongVideoSanPham.pdb
+G:\video-san-pham\bin\WebView2Loader.dll
+G:\video-san-pham\bin\Microsoft.Web.WebView2.Core.dll
+G:\video-san-pham\bin\Microsoft.Web.WebView2.WinForms.dll
+G:\video-san-pham\bin\Microsoft.Web.WebView2.Wpf.dll
+G:\video-san-pham\bin\Microsoft.Web.WebView2.Core.xml
+G:\video-san-pham\bin\Microsoft.Web.WebView2.WinForms.xml
+G:\video-san-pham\bin\Microsoft.Web.WebView2.Wpf.xml
