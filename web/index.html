@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="vi" data-ui="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HL Studio</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="app.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+<script type="module" src="vendor/three-boot.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark"></span><b class="logo"><em>HL</em> STUDIO</b></div>
+  <div class="menuwrap"><button id="btnMenu" class="ib sq" title="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="menu" id="menu" hidden>
+      <button id="btnOpen"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Mở dự án…</button>
+      <button id="btnSave"><svg viewBox="0 0 24 24"><path d="M5 3h11l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M7 3v6h8V3M7 21v-7h10v7"/></svg>Lưu dự án</button>
+      <button id="btnSet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>Cài đặt (chỗ lưu video…)</button>
+      <button id="btnReview"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M8 11l2 2 4-4"/></svg>Soát video trước khi xuất</button>
+      <a href="/api/download-source" download="hl-studio-full-source.zip" style="text-decoration:none;color:inherit"><button type="button" id="btnDownloadZip" title="Tải toàn bộ mã nguồn sạch của HL Studio về máy"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Tải mã nguồn (ZIP)…</button></a>
+      <button id="btnUi" class="uitoggle"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg><span>Nền sáng</span></button>
+      <div class="msep"></div><small>HL Studio</small>
+    </div></div>
+  <label class="projwrap" title="Tên video, dùng làm tên file khi xuất"><span>Tên dự án:</span><input id="projName" class="projname" aria-label="Tên dự án" placeholder="Video mới"></label>
+  <div class="topmid"><button id="btnUndo" class="ib sq" title="Hoàn tác (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg></button><button id="btnRedo" class="ib sq" title="Làm lại (Ctrl+Y)"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h3"/></svg></button><div class="ratio seg" id="ratioSeg" role="group" aria-label="Khung video"><button data-f="portrait" title="Dọc 9:16 — TikTok, Reels, Shorts">▯ 9:16</button><button data-f="square" title="Vuông 1:1 — Facebook, Instagram">▢ 1:1</button><button data-f="landscape" title="Ngang 16:9 — YouTube, màn hình">▭ 16:9</button></div></div>
+  <div class="topright">
+    <button id="btnNew" class="ib" title="Bắt đầu video mới hoàn toàn: xoá ảnh, chữ, cảnh đang mở (thương hiệu mặc định được giữ)">＋ Video mới</button>
+    <button id="btnRemix" class="ib" title="Đổi ý tưởng, cách kể và bố cục bằng AI">✦ AI thiết kế lại</button>
+    <button id="btnAI" class="ai" title="AI xem ảnh và nội dung, tự thiết kế cả video">✦ AI làm video</button>
+    <button id="btnAgent" class="ai" title="Trò chuyện với AI để sửa video đang làm"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>AI Agent</button>
+    <button id="btnExport" class="primary export"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Xuất video</button>
+  </div>
+</header>
+
+<main class="work">
+  <nav class="rail" aria-label="Công cụ"><button class="rb on" data-tab="tSp"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span>Ảnh sản phẩm</span></button><button class="rb" data-tab="tVid"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 10l5-3v10l-5-3z"/></svg><span>Video</span></button><button class="rb" data-tab="tLink"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7"/></svg><span>Dán link</span></button><button class="rb" data-tab="tTopic"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0012 3z"/></svg><span>Theo chủ đề</span></button><button class="rb" data-tab="tTh"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 17l.9-5.4L4.2 7.7l5.4-.8z"/></svg><span>Thương hiệu</span></button><button class="rb" data-tab="tMau"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Mẫu video</span></button><button class="rb" data-tab="tCanh"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 3v4M17 5h4"/></svg><span>Hiệu ứng</span></button><button class="rb" data-tab="tChuyen"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="9" height="14" rx="2"/><rect x="13" y="5" width="9" height="14" rx="2"/><path d="M8 12h8M13 9l3 3-3 3"/></svg><span>Chuyển cảnh</span></button><button class="rb" data-tab="tEdit"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg><span>Chỉnh sửa</span></button><button class="rb" data-tab="t3D"><svg viewBox="0 0 24 24"><path d="M21 16V8l-9-5-9 5v8l9 5z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg><span>3D thật</span></button><button class="rb" data-tab="tGiong"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg><span>Giọng đọc</span></button><button class="rb" data-tab="tAm"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Nhạc nền</span></button><button class="rb" data-tab="tCap"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/><path d="M8 10h8M8 14h5"/></svg><span>Caption</span></button><span class="grow"></span></nav>
+
+  <aside class="left panel">
+    <ol class="steps" id="steps">
+      <li data-step="1"><b>1</b><span>Thêm ảnh</span></li>
+      <li data-step="2"><b>2</b><span>AI hiểu SP</span></li>
+      <li data-step="3"><b>3</b><span>Lời đọc</span></li>
+      <li data-step="4"><b>4</b><span>Xuất video</span></li>
+    </ol>
+    <section id="tSp" class="tabpane on"><h2 class="ph">Ảnh sản phẩm</h2>
+      <div class="field">
+        <span class="lbl">Ảnh <small>chọn nhiều cùng lúc, ảnh tự tách nền · video để ở mục Video</small></span>
+        <div class="mediagrid" id="mediaGrid"></div>
+        <div class="drop" id="dropProd"><input type="file" id="fileProd" accept="image/*" multiple><span>+ Thêm ảnh sản phẩm (kéo thả vào đây)</span></div>
+        <p class="hint" id="mediaStatus"></p>
+      </div>
+      <div id="mediaDetail" class="mdetail"></div>
+      <div class="sep"></div>
+      <label class="field"><span class="lbl">Tên sản phẩm</span><input id="pName"></label>
+      <label class="field"><span class="lbl">Loại sản phẩm <small>dòng chữ nhỏ</small></span><input id="pEyebrow"></label>
+      <label class="field"><span class="lbl">Điểm nổi bật <small>mỗi dòng 1 ý</small></span><textarea id="pFeat" rows="3"></textarea></label>
+    </section>
+    <section id="tVid" class="tabpane"><h2 class="ph">Video</h2>
+      <p class="hint">Đưa video quay sẵn vào: 1 video thì kéo thả, nhiều video thì chọn cả thư mục. AI xem hình từng video rồi tự cắt, bỏ cảnh xấu, sắp thứ tự, thêm chữ, nhạc và dựng thành 1 video.</p>
+      <div class="field"><div class="mediagrid" id="vidGrid"></div>
+        <div class="drop" id="dropVid"><input type="file" id="fileVid" accept="video/*" multiple><span>+ Thêm video (kéo thả 1, nhiều video hoặc cả thư mục)</span></div></div>
+      <div id="vidHost"></div>
+    </section>
+    <section id="tLink" class="tabpane"><h2 class="ph">Làm video từ link sản phẩm</h2>
+      <p class="hint">Dán link trang sản phẩm (website, Shopee, Lazada, Tiki…). App tự lấy tên, giá, mô tả và ảnh, tách nền, rồi AI dựng video.</p>
+      <label class="field"><span class="lbl">Link sản phẩm</span><input id="linkUrl" placeholder="https://…"></label>
+      <label class="check"><input type="checkbox" id="linkAuto" checked> Lấy xong thì AI làm video luôn</label>
+      <button id="linkGo" class="primary wide">Lấy thông tin &amp; ảnh</button>
+      <p class="hint" id="linkStatus"></p>
+      <div id="linkResult" class="card" hidden></div>
+      <div class="sep"></div>
+      <div class="card"><b>🌐 Website công ty</b><p class="hint">Mở trình đọc website: tự chọn ảnh muốn dùng, sửa tên công ty, hotline, nội dung rồi đưa vào AI làm video giới thiệu.</p><button id="btnWebsite" class="ghost wide">🌐 Lấy ảnh &amp; thông tin từ website…</button><button id="btnWebTop" hidden></button></div>
+    </section>
+    <section id="tTopic" class="tabpane"><h2 class="ph">Tạo video theo chủ đề</h2>
+      <p class="hint">Gõ một chủ đề, AI tự viết kịch bản, tạo nhân vật hoạt hình dẫn chuyện, lời đọc và nhạc. Không cần ảnh.</p>
+      <label class="field"><span class="lbl">Chủ đề <small>có số liệu thật thì ghi kèm để AI vẽ biểu đồ</small></span><textarea id="tpText" rows="5" placeholder="VD: 5 lỗi khiến cân điện tử nhanh hỏng"></textarea></label>
+      <div class="row2">
+        <label class="field"><span class="lbl">Độ dài</span><select id="tpLen"><option value="0" selected>AI tự quyết</option><option value="15">15 giây</option><option value="25">25 giây</option><option value="40">40 giây</option><option value="60">60 giây</option><option value="90">90 giây</option><option value="120">2 phút</option></select></label>
+        <label class="field"><span class="lbl">Khổ video</span><select id="tpFormat"><option value="portrait">Dọc 9:16</option><option value="landscape">Ngang 16:9</option><option value="square">Vuông 1:1</option></select></label>
+      </div>
+      <label class="field"><span class="lbl">Nhân vật hoạt hình</span><select id="tpChar"><option value="on">Có nhân vật dẫn chuyện</option><option value="auto">AI tự quyết</option><option value="off">Không dùng nhân vật</option></select></label>
+      <label class="field"><span class="lbl">Dặn AI thêm <small>không bắt buộc</small></span><input id="tpNote" placeholder="VD: giọng vui, kể như câu chuyện có thật"></label>
+      <label class="check"><input type="checkbox" id="tpBrand"><span>Gắn thương hiệu<span id="tpBrandName"></span> <small>(logo, tên, hotline)</small></span></label>
+      <label class="check"><input type="checkbox" id="tpVoice" checked><span>Có lời đọc giọng VieNeu</span></label>
+      <div class="btnrow" style="justify-content:flex-start;margin-top:10px"><button id="tpGo" class="ai wide">✦ Tạo video theo chủ đề</button></div>
+      <p class="hint"><a href="#" id="tpMore">Thêm tuỳ chọn (phong cách, màu…)</a></p>
+    </section>
+    <section id="tTh" class="tabpane"><h2 class="ph">Thương hiệu</h2>
+      <div class="field"><span class="lbl">Logo <small>nền trắng sẽ tự tách</small></span>
+        <div class="drop small" id="dropLogo"><input type="file" id="fileLogo" accept="image/*"><img id="logoThumb" alt=""><span>Chọn logo</span></div></div>
+      <label class="field"><span class="lbl">Tên cửa hàng / công ty</span><input id="bName"></label>
+      <div class="row2">
+        <label class="field"><span class="lbl">Hotline</span><input id="bPhone"></label>
+        <label class="field"><span class="lbl">Website</span><input id="bWeb"></label>
+      </div>
+      <div class="field"><span class="lbl">Kiểu màu</span>
+        <div class="themes" id="themes">
+          <button data-theme="gold" class="th th-gold">Điện ảnh vàng</button>
+          <button data-theme="brand" class="th th-brand">Màu thương hiệu</button>
+          <button data-theme="studio" class="th th-studio">Nền sáng</button>
+        </div></div>
+      <label class="field"><span class="lbl">Màu chủ đạo</span><input id="bColor" type="color"></label>
+      <div class="field" id="aiColorBox" hidden><span class="lbl">Màu AI gợi ý <small>bấm để dùng</small></span><div class="swatches" id="aiColors"></div><p class="hint" id="aiReason"></p></div>
+    </section>
+    <section id="tMau" class="tabpane"><h2 class="ph">Mẫu video</h2>
+      <label class="field"><span class="lbl">Bộ khung cảnh có sẵn</span><select id="presetSel" title="Chọn mẫu khung cảnh"></select></label>
+      <button id="btnPreset" class="primary wide" title="Thay các cảnh bằng mẫu đang chọn (giữ ảnh)">Dùng mẫu này</button>
+      <div class="card"><b><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.2"/><circle cx="16" cy="16" r="1.2"/><circle cx="12" cy="12" r="1.2"/></svg> Kiểu khác</b><p class="hint">Tự dựng kịch bản mới hợp loại sản phẩm: đổi cảnh, chuyển cảnh, màu và nhạc. Mỗi lần bấm ra một kiểu, không cần mạng.</p><button id="btnRemixLocal" class="wide">🎲 Đổi kiểu khác</button></div>
+      <div class="card"><b>✦ Video theo chủ đề</b><p class="hint">Gõ một chủ đề (VD: 5 lỗi khiến cân điện tử nhanh hỏng), AI tự viết kịch bản và tạo nhân vật hoạt hình dẫn chuyện. Không cần ảnh.</p><button id="btnTopic" class="ai wide">✦ Làm video từ chủ đề</button></div>
+    </section>
+    <section id="tCanh" class="tabpane"><h2 class="ph">Hiệu ứng</h2><p class="hint">Bấm để thêm cảnh ngay sau cảnh đang chọn.</p><input id="libSearch" placeholder="Tìm hiệu ứng… (VD: 3D, giá, chữ)"><div id="sceneLib" class="lib"></div></section>
+    <section id="tChuyen" class="tabpane"><h2 class="ph">Chuyển cảnh</h2><p class="hint" id="trHint">Chọn một cảnh ở dòng thời gian, rồi bấm kiểu chuyển vào cảnh đó.</p><div id="transLib" class="lib"></div><button id="trAll" class="wide">Áp kiểu đang chọn cho tất cả cảnh</button><button id="trMix" class="wide">🎲 Trộn ngẫu nhiên cho cả video</button></section>
+<section id="tEdit" class="tabpane"><h2 class="ph">Chỉnh sửa: khung hình, lớp chữ/ảnh, phụ đề</h2>
+      <label class="field"><span class="lbl">Khung video</span><select id="editFormat"><option value="portrait">Dọc 9:16 · 1080×1920</option><option value="landscape">Ngang 16:9 · 1920×1080</option><option value="square">Vuông 1:1 · 1080×1080</option></select></label>
+      <p class="hint">Cảnh AI thiết kế riêng tự bố trí theo khung hình. Các mẫu cũ giữ trọn cảnh dọc trên nền mờ.</p>
+      <p id="directorSummary" class="hint" style="white-space:pre-line"></p>
+      <button id="undoDesign" class="ghost wide" disabled>Trở lại bản trước khi AI thiết kế</button>
+      <span class="lbl">Các lớp chữ / ảnh / video</span>
+      <div class="row2"><button id="addTextLayer" class="ghost">+ Chữ</button><button id="addMediaLayer" class="ghost">+ Ảnh/video</button></div>
+      <p class="hint">Chọn ảnh/video ở thư viện trước khi thêm lớp. Chọn lớp rồi kéo trực tiếp trên hình để đổi vị trí. Lớp video phát không tiếng.</p>
+      <select id="layerList" aria-label="Lớp đang sửa"></select>
+      <div id="layerEditor"></div>
+      <div class="sep"></div>
+      <label class="check"><input type="checkbox" id="manualSubs"> Dùng phụ đề theo mốc thời gian</label>
+      <label class="field"><span class="lbl">Mỗi dòng: bắt đầu | kết thúc | nội dung</span><textarea id="captionRows" rows="6" placeholder="0 | 3.5 | Giới thiệu công ty&#10;3.5 | 7 | Chất lượng tạo niềm tin"></textarea></label>
+      <p class="hint">Thời gian tính bằng giây từ đầu video. Bật “Hiện phụ đề” ở tab Âm thanh để hiển thị. Phụ đề này thay phụ đề tự động.</p>
+      <p id="captionError" class="hint" role="status"></p>
+      <button id="saveCaptions" class="ghost wide">Áp dụng phụ đề</button>
+    </section>
+    <section id="t3D" class="tabpane"><h2 class="ph">3D thật từ ảnh</h2>
+      <p class="hint">AI dựng ảnh sản phẩm thành mô hình 3D thật, rồi app quay sản phẩm xoay 360° có ánh sáng. Máy không cần card đồ hoạ: ảnh được gửi lên dịch vụ dựng 3D.</p>
+      <div id="m3dList" class="m3dlist"></div>
+      <label class="field"><span class="lbl">Dịch vụ dựng 3D</span><select id="m3dSvc"><option value="hf">Hugging Face (miễn phí, có thể phải chờ)</option><option value="replicate">Replicate (nhanh, ~1–3 nghìn đồng/lần, cần key)</option></select></label>
+      <label class="field" id="m3dKeyBox"><span class="lbl">Key <small>lưu trên máy anh</small></span><input id="m3dKey" type="password" placeholder="hf_… hoặc r8_…"></label>
+      <p class="hint" id="m3dStatus"></p>
+    </section>
+    <section id="tGiong" class="tabpane"><h2 class="ph">Giọng đọc</h2>
+      <label class="check"><input type="checkbox" id="aVoiceOn"> Lồng tiếng VieNeu</label>
+      <label class="field"><span class="lbl">Giọng mặc định</span><select id="aVoice"></select></label>
+      <label class="check"><input type="checkbox" id="aSubs"> Hiện phụ đề theo giọng đọc</label>
+      <div class="subopts" id="subOpts">
+        <label class="field"><span class="lbl">Kiểu phụ đề</span><select id="aSubStyle"><option value="hop_trang">Hộp trắng — cả câu, như video bảng trắng (dễ đọc nhất)</option><option value="karaoke">Karaoke — chữ sáng theo từ đang đọc</option><option value="mot_chu">TikTok — 1-2 chữ to giữa màn hình</option><option value="hien_dan">Hiện dần từng chữ</option><option value="khoi">Cả câu, nền tối</option></select></label>
+        <label class="field"><span class="lbl">Vị trí</span><select id="aSubPos"><option value="tu_dong">Tự tránh chữ trong hình</option><option value="duoi">Dưới</option><option value="giua">Giữa</option><option value="tren">Trên</option></select></label>
+        <label class="check"><input type="checkbox" id="aSubsAll"> Cả cảnh mà lời đọc giống chữ trên màn hình</label>
+        <div class="subdemo" id="subDemo"></div>
+      </div>
+      <label class="field"><span class="lbl">Nhạc nhỏ lại khi đọc <output id="aDuckOut"></output></span><input id="aDuck" type="range" min="0.1" max="1" step="0.05"></label>
+      <label class="field"><span class="lbl">Cách đọc riêng <small>mỗi dòng: chữ = cách đọc</small></span><textarea id="aPron" rows="3" placeholder="W2 = đắp liu hai&#10;TD-CA = tê đê xê a&#10;Tiến Đạt = Tiến Đạt"></textarea></label>
+      <p class="hint">App tự đọc mã máy (W2 → vê kép hai), số, đơn vị (30kg → ba mươi ki lô gam), số điện thoại. Chữ nào đọc chưa đúng ý thì thêm vào ô trên.</p>
+      <button id="btnVoiceScreen" class="primary wide" title="Mỗi cảnh: giọng đọc đúng chữ đang hiện trên màn hình">🔊 Đọc theo chữ trên màn hình</button>
+      <button id="btnVoiceAll" class="ghost wide">Đọc giọng tất cả cảnh</button>
+      <p class="hint">Cảnh nào chưa gõ lời đọc thì app tự lấy chữ trên màn hình để đọc. Muốn đọc khác thì chọn cảnh và gõ ở ô “Lời đọc cảnh này” bên phải.</p>
+      <p class="hint" id="voiceStatus"></p>
+    
+      <div class="sep"></div><span class="lbl">Lời đọc từng cảnh</span><div id="voiceList" class="vlist"></div></section>
+    <section id="tAm" class="tabpane"><h2 class="ph">Nhạc nền</h2><label class="field"><span class="lbl">Thêm nhạc riêng (tối đa 80 MB)</span><input id="musicFile" type="file" accept="audio/*"></label>
+      <p id="musicFileName" class="hint"></p><button id="removeMusicFile" class="ghost small">Bỏ nhạc riêng</button>
+      <label class="field"><span class="lbl">Nhạc nền</span>
+        <select id="aMusic"><option value="dien_anh">Điện ảnh (trầm, sang)</option><option value="soi_dong">Sôi động</option><option value="nhe">Nhẹ nhàng (không trống)</option><option value="khong">Không nhạc</option></select></label>
+      <label class="field"><span class="lbl">Âm lượng nhạc <output id="aVolOut"></output></span><input id="aVol" type="range" min="0" max="1.5" step="0.05"></label>
+      <div class="sep"></div>
+      <label class="check"><input type="checkbox" id="aBeat"> 🥁 Chuyển cảnh khớp nhịp nhạc</label>
+      <p class="hint" id="beatInfo">Mỗi lần chuyển cảnh rơi đúng phách nhạc. Không cắt lời đọc: cảnh có giọng sẽ kéo dài tới phách kế tiếp. Nhạc tự nhỏ lại khi có giọng đọc (chỉnh ở mục Giọng đọc).</p>
+      </section>
+    <section id="tCap" class="tabpane"><h2 class="ph">Caption đăng bài</h2>
+      <p class="hint">Xuất video xong AI tự viết caption để đăng Facebook / TikTok / Zalo. Video có thay đổi thì AI tự viết lại; không đổi thì giữ nguyên. Sửa thẳng trong ô là được lưu.</p>
+      <div class="capbox" id="capBox"><div class="caphead"><span id="capStat" class="hint">Chưa có caption.</span><span class="grow"></span><button id="capRedo" class="ghost small" title="Bắt AI viết caption mới">✍ AI viết</button><button id="capCopy" class="primary small">Sao chép</button></div><textarea id="capText" rows="14" placeholder="Bấm ✍ AI viết, hoặc xuất video xong caption sẽ tự hiện ở đây…"></textarea></div>
+    </section>
+  </aside>
+
+  <section class="stage">
+    <div class="screen-wrap" id="screenWrap"><div class="screen" id="screen"><canvas id="cv"></canvas><div class="safe" id="safe" hidden></div></div></div>
+    <div class="transport">
+      <input type="range" id="scrub" class="scrub" min="0" max="1000" value="0" aria-label="Tua">
+      <div class="trow">
+        <span class="time" id="timeLbl">00:00:00:00 / 00:00:00:00</span>
+        <div class="tctl"><button id="btnBack" class="ibtn" title="Cảnh trước"><svg viewBox="0 0 24 24"><path d="M6 5v14M18 6l-9 6 9 6z"/></svg></button><button id="btnPlay" class="round" aria-label="Phát">▶</button><button id="btnFwd" class="ibtn" title="Cảnh sau"><svg viewBox="0 0 24 24"><path d="M18 5v14M6 6l9 6-9 6z"/></svg></button></div>
+        <div class="topts"><button id="btnMute" class="ibtn" title="Tắt / bật tiếng"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></button>
+          <select id="qualSel" title="Chỉ là độ nét KHUNG XEM TRƯỚC trong app cho nhẹ máy. Video XUẤT ra luôn 1080p đầy đủ."><option value=".33">360p</option><option value=".5" selected>540p</option><option value=".75">720p</option><option value="1">1080p (nặng máy)</option></select>
+          <label class="check small" title="Hiện vùng bị nút TikTok che"><input type="checkbox" id="chkSafe"> TikTok</label><label class="check small"><input type="checkbox" id="chkLoop" checked> Lặp</label>
+          <button id="btnFull" class="ibtn" title="Toàn màn hình"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
+      </div>
+      <div class="job" id="job"><span class="tx" id="jobText">Sẵn sàng</span><div class="bar"><i id="jobBar"></i></div></div>
+    </div>
+  </section>
+
+  <aside class="right panel"><div class="rhead">Thuộc tính</div><div id="inspector" class="rpane"></div></aside>
+</main>
+
+<footer class="tl">
+  <div class="tlhead">
+    <button id="tlUndo" class="tb" title="Hoàn tác"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg></button><button id="tlRedo" class="tb" title="Làm lại"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 000 10h3"/></svg></button><i class="tsep"></i>
+    <button class="tb" data-act="dup" title="Nhân bản cảnh"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9a2 2 0 002 2h3"/></svg></button><button class="tb" data-act="del" title="Xoá cảnh"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button><button class="tb" data-act="toggle" title="Tắt / bật cảnh"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></button><button class="tb" data-act="up" title="Đưa cảnh lên trước"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="tb" data-act="down" title="Đưa cảnh ra sau"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button><i class="tsep"></i>
+    <div class="addwrap"><button id="btnAdd" class="tb wide2"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Thêm cảnh</button><div class="addmenu" id="addMenu" hidden></div></div>
+    <span id="totalLbl" class="total"></span>
+    <div class="zoom"><button id="zOut" class="tb" title="Thu nhỏ"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><input type="range" id="tlZoom" min="1" max="6" step=".1" value="1"><button id="zIn" class="tb" title="Phóng to"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  </div>
+  <div class="tlbody">
+    <div class="tllabels">
+      <div class="ll l0"></div>
+      <div class="ll l1"><svg viewBox="0 0 24 24"><path d="M4 6V4h16v2M12 4v16M9 20h6"/></svg><span>Lời đọc</span><button class="mini" id="lvSub" title="Phụ đề"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="mini" id="lvMute" title="Tắt / bật giọng đọc"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></button></div>
+      <div class="ll l2"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/></svg><span>Dòng chính</span></div>
+      <div class="ll l3"><svg viewBox="0 0 24 24"><path d="M2 12h2M6 8v8M10 5v14M14 8v8M18 10v4M22 12h0"/></svg><span>Âm thanh</span><button class="mini" id="laMute" title="Tắt / bật nhạc nền"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></button></div>
+    </div>
+    <div class="tlscroll" id="tlScroll"><div class="lanes" id="lanes">
+      <div class="ruler" id="ruler"></div>
+      <div class="lane" id="laneVoice"></div>
+      <div class="tltrack" id="track"></div>
+      <div class="lane wave"><canvas id="laneWave"></canvas></div>
+      <div class="playhead" id="playhead"></div>
+    </div></div>
+  </div>
+</footer>
+
+<div class="agent" id="agent" hidden>
+  <div class="ahead"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg><b>AI Agent</b><small>Antigravity · gói Pro</small><span class="grow"></span><button id="agClose" class="mini" title="Thu nhỏ"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>
+  <div class="chat" id="agChat">
+    <div class="msg ai">Chào anh! Em là trợ lý dựng video. Anh nói em sửa video đang có, VD: “cảnh 3 chữ to hơn”, “đổi nhạc sôi động”, “thêm cảnh giá 1.290.000đ giảm 20%”, “lời đọc vui hơn”. Muốn làm video mới từ đầu thì bấm ✦ Làm video mới.</div>
+  </div>
+  <p id="agStatus" class="hint aistat"></p>
+  <div class="composer">
+    <textarea id="agInput" rows="3" placeholder="Nói cho AI biết anh muốn sửa gì…"></textarea>
+    <div class="crow"><select id="agModel" class="msel" title="Mô hình AI"><option value="">Tự chọn (gói Pro)</option></select><button id="agRemix" class="ghost small" title="Không cần AI: đổi ngẫu nhiên bộ hiệu ứng">🎲 Kiểu khác</button></div>
+    <div class="crow"><button id="agNew" class="ghost small mk" title="Mở hộp AI làm video mới từ đầu">✦ Làm video mới</button><button id="agSend" class="primary send" title="Gửi (Ctrl+Enter)"><svg viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-2-7z"/></svg>Gửi</button></div>
+  </div>
+</div>
+
+<div class="modal" id="aiModal" hidden>
+  <div class="box wide ai2">
+    <div class="aihead"><h2 id="aiTitle">✦ AI làm video</h2><p class="hint">AI tự lo ý tưởng, bố cục, nền động, màu, nhạc, lời đọc và tách nền ảnh sản phẩm. Anh soát nội dung rồi xuất.</p></div>
+    <div class="aigrid">
+      <div class="aicol">
+        <div class="aicap">Nội dung <button id="aiWeb" class="ghost aiweb" type="button">🌐 Lấy ảnh &amp; thông tin từ website…</button></div>
+        <label class="field"><span class="lbl">Loại video <small>để AI tự chọn nếu anh chưa có ý tưởng</small></span><select id="adMode"><option value="auto">AI tự chọn cách làm phù hợp</option><option value="topic">Theo chủ đề — AI tự tạo nhân vật hoạt hình</option><option value="product">Quảng cáo chốt đơn</option><option value="company">Giới thiệu công ty</option><option value="premium">Sản phẩm sang trọng</option><option value="tutorial">Hướng dẫn sử dụng</option><option value="compare">So sánh / tư vấn chọn mua</option><option value="catalogue">Catalogue nhiều sản phẩm</option><option value="project">Công trình / lắp đặt / bàn giao</option><option value="promotion">Thông báo / khuyến mãi</option></select></label>
+        <label class="field" id="aiInfoField"><span class="lbl" id="aiInfoLbl">Thông tin sản phẩm <small>không bắt buộc, càng đủ càng đúng</small></span><textarea id="aiInfo" rows="7" placeholder="VD: Cân đếm Marcus TD-CA 30kg, sai số 1g, pin sạc dùng 210 giờ, bảo hành 24 tháng, giao toàn quốc. Khách: xưởng cơ khí, kho phụ tùng."></textarea></label>
+        <label class="field"><span class="lbl">Dặn AI thêm <small>không bắt buộc</small></span><input id="aiRevision" placeholder="VD: ít chữ, không xoay máy; làm như phóng sự nhà xưởng"></label>
+      </div>
+      <div class="aicol">
+        <div class="aicap">Thiết lập</div>
+        <div class="row2">
+          <label class="field"><span class="lbl">Độ dài</span><select id="aiLen"><option value="0" selected>AI tự quyết</option><option value="15">15 giây</option><option value="25">25 giây</option><option value="40">40 giây</option><option value="60">60 giây</option><option value="90">90 giây</option><option value="120">2 phút</option></select></label>
+          <label class="field"><span class="lbl">Khổ video</span><select id="aiFormat"><option value="portrait">Dọc 9:16 · TikTok, Reels, Shorts</option><option value="landscape">Ngang 16:9 · YouTube, màn hình, website</option><option value="square">Vuông 1:1 · Facebook, Zalo</option></select></label>
+        </div>
+        <div class="row2">
+          <label class="field"><span class="lbl">Phong cách</span><select id="aiStyle"><option value="tu_chon">AI tự chọn</option><option value="gold">Điện ảnh sang trọng</option><option value="brand">Màu thương hiệu</option><option value="studio">Nền sáng sạch</option></select></label>
+          <label class="field"><span class="lbl">Nhân vật hoạt hình</span><select id="aiChar"><option value="auto">AI tự quyết theo nội dung</option><option value="on">Luôn có nhân vật dẫn chuyện</option><option value="off">Không dùng nhân vật</option></select></label>
+        </div>
+        <div class="field"><span class="lbl">Màu mong muốn</span>
+      <div class="colorrow"><label class="check"><input type="radio" name="aiColMode" value="ai" checked> Để AI chọn màu</label><label class="check"><input type="radio" name="aiColMode" value="me"> Dùng màu này:</label><input type="color" id="aiColorPick" value="#16A34A"></div></div>
+        <div class="aichecks">
+          <label class="check" id="aiBrandRow"><input type="checkbox" id="aiBrand" checked><span>Gắn thương hiệu<span id="aiBrandName"></span>: logo, tên, hotline <small>bỏ tích = không nhắc công ty</small></span></label>
+          <label class="check"><input type="checkbox" id="aiVoice" checked><span>AI viết lời đọc và chọn giọng VieNeu</span></label>
+          <label class="check"><input type="checkbox" id="aiAutoExport"><span>Tự xuất MP4 sau khi dựng và tạo giọng xong</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="aifoot"><p id="aiStatus" class="hint"></p><div class="btnrow"><button id="aiClose" class="ghost">Đóng</button><button id="aiRemix" class="ghost" title="Không cần AI: đổi ngẫu nhiên bộ hiệu ứng hợp loại sản phẩm">🎲 Kiểu khác</button><button id="aiRewrite" class="ghost" title="Giữ nguyên các cảnh, chỉ viết lại chữ">Chỉ viết lại chữ</button><button id="aiGo" class="primary">Làm video</button></div></div>
+  </div>
+</div>
+<div class="modal" id="websiteModal" hidden><div class="box wide">
+  <h2>Làm quảng cáo từ website</h2>
+  <label class="field"><span class="lbl">Trang chủ, giới thiệu hoặc trang sản phẩm</span><input id="websiteUrl" placeholder="https://congty.vn"></label>
+  <button id="readWebsite" class="primary">Đọc website</button><p id="websiteStatus" class="hint" role="status"></p>
+  <label class="field"><span class="lbl">Tên công ty / tiêu đề (anh sửa lại nếu cần)</span><input id="websiteTitle"></label>
+  <label class="field"><span class="lbl">Hotline (lấy từ liên kết gọi điện nếu trang có)</span><input id="websitePhone"></label>
+  <label class="field"><span class="lbl">Thông tin dùng để viết quảng cáo</span><textarea id="websiteText" rows="6"></textarea></label>
+  <p class="hint">Chọn ảnh muốn dùng. Trang cần đăng nhập hoặc chỉ tải nội dung bằng JavaScript có thể không lấy đủ; anh có thể nhập thêm trang khác.</p>
+  <div id="websiteImages" class="website-images"></div>
+  <label class="check"><input type="checkbox" id="websiteFresh" checked><span>Làm video mới chỉ từ website này <small style="color:var(--dim)">không dùng ảnh, logo, thông tin cũ đang mở. Muốn lấy lại dự án cũ: tab Chỉnh sửa &gt; "Trở lại bản trước khi AI thiết kế"</small></span></label>
+  <div class="btnrow"><button id="useWebsite" class="primary">Đưa vào dự án &amp; mở AI làm video</button><button id="closeWebsite" class="ghost">Đóng</button></div>
+</div></div>
+<div class="modal" id="exportModal" hidden>
+  <div class="box">
+    <h2>Xuất video</h2>
+    <p id="exText">Đang chuẩn bị…</p>
+    <div class="bar"><i id="exBar"></i></div>
+    <p class="hint" id="exHint"></p>
+    <p class="hint exwhere">Lưu vào: <b id="exWhere"></b> <button class="ghost small" id="exChange">Đổi chỗ lưu</button></p>
+    <div class="btnrow"><button id="exCancel" class="ghost">Dừng</button><button id="exCap" class="ghost" hidden>✍ Xem caption đăng bài</button><button id="exOpen" class="primary" hidden>Mở thư mục</button><button id="exClose" class="ghost" hidden>Đóng</button></div>
+  </div>
+</div>
+<div class="modal" id="openModal" hidden>
+  <div class="box"><h2>Mở dự án</h2><div id="projList" class="projlist"></div><div class="btnrow"><button id="openDir" class="ghost">📁 Mở thư mục dự án</button><label class="ghost filebtn">Mở file dự án khác…<input type="file" id="openFile" accept=".json,application/json" hidden></label><button id="openClose" class="ghost">Đóng</button></div></div>
+</div>
+<div class="modal" id="setModal" hidden>
+  <div class="box wide"><h2>⚙ Cài đặt</h2>
+    <div class="field"><span class="lbl">Thư mục lưu video xuất ra</span>
+      <div class="pathrow"><input id="setOut" placeholder="Bấm “Chọn thư mục” hoặc dán đường dẫn, VD: D:\Video TikTok"><button id="setPick" class="primary">📁 Chọn thư mục…</button></div>
+      <div class="btnrow left"><button id="setSaveOut" class="ghost small">Lưu đường dẫn đã gõ</button><button id="setOpenOut" class="ghost small">Mở thư mục này</button><button id="setDefOut" class="ghost small">Về chỗ mặc định</button></div>
+      <p class="hint" id="setOutHint"></p></div>
+    <div class="field"><span class="lbl">Thư mục dự án đã lưu</span><div class="pathrow"><input id="setProj" readonly><button id="setOpenProj" class="ghost">Mở</button></div></div>
+    <div class="field"><span class="lbl">Nguồn AI <small>dùng phần mềm AI đã đăng nhập trên máy (Antigravity, Codex, Claude) hoặc khoá API ở mục "Khoá AI & MCP" bên dưới</small></span>
+      <div id="aiSrcList" class="aisrc"></div><p class="hint" id="aiSrcHint"></p></div>
+    <div class="field"><span class="lbl">Bộ nhớ tạm của app <small>chỉ giữ file của video đang làm; video đã xuất ở thư mục anh chọn không bị đụng tới</small></span>
+      <div class="row"><span id="storeInfo" class="hint">Đang tính…</span><button class="ghost small" id="btnClean">🧹 Dọn ngay</button></div>
+      <p class="hint">Mỗi lần mở app, app tự xoá file tạm của các video cũ không còn dùng.</p></div>
+    <div class="field"><label class="check small"><input type="checkbox" id="optStab"> Chống rung khi nhập video</label>
+      <p class="hint">Mặc định TẮT: video giữ nguyên chất lượng gốc. Bật khi video quay tay rung nhiều (hình sẽ hơi mềm hơn gốc một chút).</p></div>
+    <div class="btnrow"><button id="setClose" class="ghost">Đóng</button></div>
+  </div>
+</div>
+<div class="modal" id="revModal" hidden>
+  <div class="box wide"><h2>🔎 Soát video trước khi xuất</h2>
+    <p class="revsum" id="revSum"></p>
+    <div id="revList" class="revlist"></div>
+    <label class="check"><input type="checkbox" id="revSkip"> Không soát nữa với video này</label>
+    <div class="btnrow"><button id="revAI" class="ghost">🤖 AI xem kỹ từng cảnh</button><span class="grow"></span><button id="revClose" class="ghost">Đóng, tự sửa tay</button><button id="revGo" class="ghost">Bỏ qua, vẫn xuất</button><button id="revFix" class="primary">🛠 AI tự sửa hết</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<canvas id="exportCv" hidden></canvas>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="app.min.js"></script>
+</body>
+</html>
