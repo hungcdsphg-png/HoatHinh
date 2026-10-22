@@ -1,0 +1,60 @@
+╔══════════════════════════════════════════════════════════════╗
+        HL STUDIO — HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG
+        Phần mềm làm video sản phẩm + phim hoạt hình bằng AI
+╚══════════════════════════════════════════════════════════════╝
+
+────────────────────────────────────────────────────────────────
+A. CÀI ĐẶT (làm 1 lần)
+────────────────────────────────────────────────────────────────
+1. Giải nén thư mục vừa tải về (chuột phải → Extract All / Giải nén tất cả).
+2. Mở thư mục, bấm đúp file:  CAI-DAT.bat
+   - Lần đầu mất 3–5 phút. Nếu máy chưa có Python, nó tự cài rồi báo bạn
+     chạy lại CAI-DAT.bat một lần nữa.
+   - Cài xong có biểu tượng "HL Studio" ngoài màn hình (Desktop).
+3. Nếu lúc xuất video báo thiếu ffmpeg → bấm đúp  CAI-FFMPEG.bat.
+4. Giọng đọc VieNeu (25 giọng Việt, chạy không cần mạng) được cài sẵn
+   cùng CAI-DAT.bat. Nếu app báo chưa có VieNeu → bấm đúp
+   CAI-GIONG-VIENEU.bat  hoặc nút "Cài giọng VieNeu" trong Cài đặt.
+   Ngoài ra luôn có giọng Edge miễn phí (cần mạng).
+
+→ Mở app: bấm đúp biểu tượng "HL Studio".
+
+────────────────────────────────────────────────────────────────
+B. DÙNG THỬ 15 NGÀY
+────────────────────────────────────────────────────────────────
+- Cài xong được DÙNG THỬ MIỄN PHÍ 15 NGÀY, đủ mọi tính năng.
+  Video xuất trong thời gian thử có dòng chữ mờ.
+- Hết 15 ngày: cần mua bản quyền để tiếp tục xuất video.
+  Mở ⚙ Cài đặt → mục Bản quyền sẽ thấy số liên hệ mua.
+
+────────────────────────────────────────────────────────────────
+C. KÍCH HOẠT BẢN QUYỀN
+────────────────────────────────────────────────────────────────
+1. Mở app → bấm bánh răng ⚙ (Cài đặt) → kéo xuống mục "Bản quyền".
+2. Bấm "Sao chép" ở dòng "Mã máy" → gửi mã đó cho người bán (Zalo).
+3. Nhận lại mã kích hoạt (bắt đầu bằng HL1-…) → dán vào ô → bấm "Kích hoạt".
+   Xong! Video xuất hết chữ mờ.
+   (Mã chỉ dùng cho đúng máy đã gửi mã máy.)
+
+📞 Liên hệ mua bản quyền / hỗ trợ:  0961.022.023  (Hoàn)
+
+────────────────────────────────────────────────────────────────
+D. CÀI KHOÁ AI (để AI viết kịch bản, vẽ hình)
+────────────────────────────────────────────────────────────────
+Phần "AI thiết kế video" và "Phim hoạt hình" cần khoá AI của BẠN:
+  ⚙ Cài đặt → "Khoá AI & MCP" → dán khoá Gemini (lấy miễn phí tại
+  aistudio.google.com) HOẶC khoá OpenAI → Lưu.
+(Khoá này là của bạn, bạn tự quản lý; app không dùng tài khoản của ai khác.)
+
+────────────────────────────────────────────────────────────────
+E. LÀM VIDEO NHANH
+────────────────────────────────────────────────────────────────
+• VIDEO SẢN PHẨM: Thêm ảnh sản phẩm (cột trái) → gõ thông tin (có thể
+  "📄 Đưa file Word vào") → bấm "✦ AI làm video" → xuất.
+• PHIM HOẠT HÌNH: mục "Hoạt hình" → gõ ý tưởng → "AI viết tiểu phẩm" →
+  "Vẽ nhân vật & dựng phim".
+• NHẠC: tab "Nhạc nền" → "Thêm nhạc riêng" chọn file mp3 của bạn.
+• XUẤT: nút "Xuất video" (góc trên) → chọn độ nét → Lưu.
+  Video lưu ở thư mục đặt trong ⚙ Cài đặt (mặc định: Videos\video-san-pham).
+
+Chúc bạn làm video vui vẻ!  —  Hỗ trợ: 0961.022.023

@@ -1,0 +1,10 @@
+# HL Studio - Thư viện đầy đủ cho Desktop (Bao gồm AI offline, ONNX, OpenCV, SciPy, FFmpeg)
+-r requirements.txt
+scipy>=1.9.0
+onnxruntime>=1.14.0
+opencv-python-headless>=4.7.0
+imageio-ffmpeg>=0.4.8
+
+# Tuỳ chọn nâng cao:
+# faster-whisper>=0.10.0
+# vieneu
