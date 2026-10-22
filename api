@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+"""
+HL Studio - Vercel Serverless Function & API Gateway.
+Cung cấp toàn bộ API và phục vụ giao diện Web cho HL Studio trên Vercel.
+Tự động kích hoạt bản quyền thương mại Full Pro và cấu hình đường dẫn /tmp.
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+# Đảm bảo đường dẫn gốc của project được nạp vào sys.path
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+# Cấu hình môi trường Vercel Serverless
+os.environ["VSP_HOME"] = os.environ.get("VSP_HOME") or "/tmp/.video-san-pham"
+os.environ["HL_OPEN_SOURCE"] = "1"
+os.environ["PYTHONIOENCODING"] = "utf-8"
+
+import server
+
+# Đảm bảo các thư mục ghi dữ liệu tạm trong /tmp luôn sẵn sàng
+for _d in (server.MEDIA_DIR, server.TTS_DIR, server.PROJ_DIR):
+    try:
+        _d.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+
+
+class handler(server.H):
+    """Vercel Serverless Request Handler kế thừa từ server.H."""
+
+    def do_GET(self):
+        # Trả về giao diện index.html nếu truy cập trang chủ qua API rewrite
+        if self.path in ("", "/", "/index.html"):
+            index_file = (server.APP_DIR / "public" / "index.html") if (server.APP_DIR / "public" / "index.html").exists() else (server.WEB_DIR / "index.html")
+            if index_file.exists():
+                return self.send_file(index_file)
+        return super().do_GET()
